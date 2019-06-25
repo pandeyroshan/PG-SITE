@@ -7,15 +7,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 # Create your views here.
 
-def email(request):
-    subject = 'Thank you for registering to our site'
-    message = ' it  means a world to us '
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = ['receiver@gmail.com',]
-    send_mail( subject, message, email_from, recipient_list )
-    return redirect('redirect to a new page')
-
-
 def home(request):
     if request.method == 'POST':
         data = request.POST.dict()
@@ -24,17 +15,33 @@ def home(request):
         messageData = data.get("message")
         dataObject = MessageData(name=nameData,email=emailData,message=messageData)
         dataObject.save()
-        subject = 'Numero Uno Home'
-        message = 'Thanks for your Query, we will get back to you soon.'
+        subject = 'NUMERO UNO HOME'
+        message = 'Dear '+nameData+'! We have recieved your Query, Our Assistant will get back to you soon.'
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [emailData]
         send_mail( subject, message, email_from, recipient_list )
     dataSet = AdminAddress.objects.all()
     data = dataSet[0]
+    RoomDataSet = RoomType.objects.all()
+    doubleData = RoomDataSet[0]
+    tripleData = RoomDataSet[1]
+    fourData = RoomDataSet[2]
     context = {
         'name' : data.name,
         'address' : data.address,
         'phone' : data.phone,
-        'email' : data.email
+        'email' : data.email,
+        'doubleType': doubleData.roomType, 
+        'doubleStatus': doubleData.status,
+        'doubleRent': doubleData.rentMoney,
+        'doubleNote': doubleData.shortNote,
+        'tripleType': tripleData.roomType, 
+        'tripleStatus': tripleData.status,
+        'tripleRent': tripleData.rentMoney,
+        'tripleNote': tripleData.shortNote,
+        'fourType': fourData.roomType, 
+        'fourStatus': fourData.status,
+        'fourRent': fourData.rentMoney,
+        'fourNote': fourData.shortNote
     }
     return render(request,'hostel/index.html',context)
